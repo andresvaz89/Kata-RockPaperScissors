@@ -3,27 +3,28 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Game {
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("¡Hola, elige tu tirada!");
-        System.out.println("Opciones: 1 para Piedra, 2 para Papel, 3 para Tijera");
-        
+        System.out.println("¡Bienvenido a Piedra, Papel, Tijera, Lagarto o Spock!");
+        System.out.println("Opciones: 1 para Piedra, 2 para Papel, 3 para Tijera, 4 para Lagarto, 5 para Spock");
+
         boolean seguirJugando = true;
 
         while (seguirJugando) {
-            System.out.print("Elige tu jugada (1, 2, 3): ");
+            System.out.print("Elige tu jugada (1, 2, 3, 4, 5): ");
             int jugadorEleccion = scanner.nextInt();
 
-            if (jugadorEleccion < 1 || jugadorEleccion > 3) {
-                System.out.println("No vale, prueba otra vez.");
+            if (jugadorEleccion < 1 || jugadorEleccion > 5) {
+                System.out.println("Opción inválida, intenta de nuevo.");
                 continue;
             }
 
             String jugadorJugada = getJugada(jugadorEleccion);
-            String ordenadorJugada = getJugada(new Random().nextInt(3) + 1);
+            String ordenadorJugada = getJugada(new Random().nextInt(5) + 1);
 
-            System.out.println("Has elegido: " + jugadorJugada+" y el ordenador ha elegido: " + ordenadorJugada);
-          
+            System.out.println("Tu jugada: " + jugadorJugada);
+            System.out.println("Jugada del ordenador: " + ordenadorJugada);
 
             String resultado = determinarGanador(jugadorJugada, ordenadorJugada);
             System.out.println(resultado);
@@ -41,6 +42,8 @@ public class Game {
             case 1: return "Piedra";
             case 2: return "Papel";
             case 3: return "Tijera";
+            case 4: return "Lagarto";
+            case 5: return "Spock";
             default: throw new IllegalArgumentException("Elección inválida");
         }
     }
@@ -48,14 +51,21 @@ public class Game {
     private static String determinarGanador(String jugador, String ordenador) {
         if (jugador.equals(ordenador)) {
             return "¡Empate!";
-        } else if (
-            (jugador.equals("Piedra") && ordenador.equals("Tijera")) ||
-            (jugador.equals("Papel") && ordenador.equals("Piedra")) ||
-            (jugador.equals("Tijera") && ordenador.equals("Papel"))
-        ) {
-            return "¡Ganaste!";
-        } else {
-            return "¡Perdiste!";
         }
+
+        if (ganaSobre(jugador, ordenador)) {
+            return "¡Ganaste! " + jugador + " vence a " + ordenador;
+        } else {
+            return "¡Perdiste! " + ordenador + " vence a " + jugador;
+        }
+    }
+
+    private static boolean ganaSobre(String jugada1, String jugada2) {
+        // Reglas según la versión de Sheldon
+        return (jugada1.equals("Tijera") && (jugada2.equals("Papel") || jugada2.equals("Lagarto"))) ||
+               (jugada1.equals("Papel") && (jugada2.equals("Piedra") || jugada2.equals("Spock"))) ||
+               (jugada1.equals("Piedra") && (jugada2.equals("Tijera") || jugada2.equals("Lagarto"))) ||
+               (jugada1.equals("Lagarto") && (jugada2.equals("Spock") || jugada2.equals("Papel"))) ||
+               (jugada1.equals("Spock") && (jugada2.equals("Tijera") || jugada2.equals("Piedra")));
     }
 }
