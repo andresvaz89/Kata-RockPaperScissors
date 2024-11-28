@@ -3,15 +3,15 @@ package com.factoriaf5.rps.models;
 import java.util.Arrays;
 import java.util.List;
 
-public class Spock implements Move {
+public class Lizard implements Move {
     @Override
     public String getName() {
-        return "Spock";
+        return "Lagarto";
     }
 
     @Override
     public boolean beats(Move other) {
-        List<String> defeats = Arrays.asList("Tijera", "Piedra");
+        List<String> defeats = Arrays.asList("Spock", "Papel");
         return defeats.contains(other.getName());
     }
 }

@@ -1,4 +1,10 @@
 package com.factoriaf5.rps.application;
+
+
+
+import com.factoriaf5.rps.models.Move;
+import com.factoriaf5.rps.models.MoveFactory;
+
 import java.util.Random;
 import java.util.Scanner;
 
@@ -20,11 +26,11 @@ public class Game {
                 continue;
             }
 
-            String jugadorJugada = getJugada(jugadorEleccion);
-            String ordenadorJugada = getJugada(new Random().nextInt(5) + 1);
+            Move jugadorJugada = MoveFactory.getMove(jugadorEleccion);
+            Move ordenadorJugada = MoveFactory.getMove(new Random().nextInt(5) + 1);
 
-            System.out.println("Tu jugada: " + jugadorJugada);
-            System.out.println("Jugada del ordenador: " + ordenadorJugada);
+            System.out.println("Tu jugada: " + jugadorJugada.getName());
+            System.out.println("Jugada del ordenador: " + ordenadorJugada.getName());
 
             String resultado = determinarGanador(jugadorJugada, ordenadorJugada);
             System.out.println(resultado);
@@ -37,35 +43,15 @@ public class Game {
         scanner.close();
     }
 
-    private static String getJugada(int eleccion) {
-        switch (eleccion) {
-            case 1: return "Piedra";
-            case 2: return "Papel";
-            case 3: return "Tijera";
-            case 4: return "Lagarto";
-            case 5: return "Spock";
-            default: throw new IllegalArgumentException("Elección inválida");
-        }
-    }
-
-    private static String determinarGanador(String jugador, String ordenador) {
-        if (jugador.equals(ordenador)) {
+    private static String determinarGanador(Move jugador, Move ordenador) {
+        if (jugador.getName().equals(ordenador.getName())) {
             return "¡Empate!";
         }
 
-        if (ganaSobre(jugador, ordenador)) {
-            return "¡Ganaste! " + jugador + " vence a " + ordenador;
+        if (jugador.beats(ordenador)) {
+            return "¡Ganaste! " + jugador.getName() + " vence a " + ordenador.getName();
         } else {
-            return "¡Perdiste! " + ordenador + " vence a " + jugador;
+            return "¡Perdiste! " + ordenador.getName() + " vence a " + jugador.getName();
         }
-    }
-
-    private static boolean ganaSobre(String jugada1, String jugada2) {
-        // Reglas según la versión de Sheldon
-        return (jugada1.equals("Tijera") && (jugada2.equals("Papel") || jugada2.equals("Lagarto"))) ||
-               (jugada1.equals("Papel") && (jugada2.equals("Piedra") || jugada2.equals("Spock"))) ||
-               (jugada1.equals("Piedra") && (jugada2.equals("Tijera") || jugada2.equals("Lagarto"))) ||
-               (jugada1.equals("Lagarto") && (jugada2.equals("Spock") || jugada2.equals("Papel"))) ||
-               (jugada1.equals("Spock") && (jugada2.equals("Tijera") || jugada2.equals("Piedra")));
     }
 }
